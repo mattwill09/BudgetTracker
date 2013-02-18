@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@Scripts.Render("~/bundles/knockout")
+
+<h2>Your categories (<span data-bind="text: categories().length"></span>)</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Category name</th>
+            <th>Monthly Amount</th>
+            <th></th>
+        </tr>
+    </thead>
+    <!-- Todo: Generate table body -->
+    <tbody data-bind="foreach: categories">
+        <tr>
+            <td>
+                <input data-bind="value: Name" /></td>
+            <td>
+                <input data-bind="value: EditValue" />
+            </td>
+            <td><a href='#' data-bind="click: $root.removeCategory">Remove</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<button data-bind="click: addCategory">Add another category</button>
+
+<button data-bind="click: save, enable: categories().length > 0">Save</button>
+
+<h3 data-bind="visible: totalBudget() > 0">Total Monthly Budget: $<span data-bind="text: totalBudget().toFixed(2)"></span>
+</h3>
+
+<script type="text/javascript" src="~/Scripts/CategoryStuff.js"></script>

@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BudgetDBModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="BudgetDBModelStoreContainer">
+          <EntitySet Name="BudgetCategories" EntityType="BudgetDBModel.Store.BudgetCategories" store:Type="Tables" />
+          <EntitySet Name="ExpenseCategory" EntityType="BudgetDBModel.Store.ExpenseCategory" store:Type="Tables" />
+          <EntitySet Name="Expenses" EntityType="BudgetDBModel.Store.Expenses" store:Type="Tables" />
+          <AssociationSet Name="FK_CategoryID" Association="BudgetDBModel.Store.FK_CategoryID">
+            <End Role="BudgetCategories" EntitySet="BudgetCategories" />
+            <End Role="ExpenseCategory" EntitySet="ExpenseCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenseID" Association="BudgetDBModel.Store.FK_ExpenseID">
+            <End Role="Expenses" EntitySet="Expenses" />
+            <End Role="ExpenseCategory" EntitySet="ExpenseCategory" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="BudgetCategories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Value" Type="int" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="ExpenseCategory">
+          <Key>
+            <PropertyRef Name="ExpenseID" />
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="ExpenseID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CategoryID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Expenses">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_CategoryID">
+          <End Role="BudgetCategories" Type="BudgetDBModel.Store.BudgetCategories" Multiplicity="1" />
+          <End Role="ExpenseCategory" Type="BudgetDBModel.Store.ExpenseCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BudgetCategories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ExpenseCategory">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenseID">
+          <End Role="Expenses" Type="BudgetDBModel.Store.Expenses" Multiplicity="1" />
+          <End Role="ExpenseCategory" Type="BudgetDBModel.Store.ExpenseCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Expenses">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ExpenseCategory">
+              <PropertyRef Name="ExpenseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BudgetDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BudgetDBEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="BudgetCategories" EntityType="BudgetDBModel.BudgetCategory" />
+          <EntitySet Name="Expenses" EntityType="BudgetDBModel.Expense" />
+          <AssociationSet Name="ExpenseCategory" Association="BudgetDBModel.ExpenseCategory">
+            <End Role="BudgetCategories" EntitySet="BudgetCategories" />
+            <End Role="Expenses" EntitySet="Expenses" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="BudgetCategory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Value" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Expenses" Relationship="BudgetDBModel.ExpenseCategory" FromRole="BudgetCategories" ToRole="Expenses" />
+        </EntityType>
+        <EntityType Name="Expense">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Description" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="BudgetCategories" Relationship="BudgetDBModel.ExpenseCategory" FromRole="Expenses" ToRole="BudgetCategories" />
+        </EntityType>
+        <Association Name="ExpenseCategory">
+          <End Role="BudgetCategories" Type="BudgetDBModel.BudgetCategory" Multiplicity="*" />
+          <End Role="Expenses" Type="BudgetDBModel.Expense" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BudgetDBModelStoreContainer" CdmEntityContainer="BudgetDBEntities">
+          <EntitySetMapping Name="BudgetCategories">
+            <EntityTypeMapping TypeName="BudgetDBModel.BudgetCategory">
+              <MappingFragment StoreEntitySet="BudgetCategories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expenses">
+            <EntityTypeMapping TypeName="BudgetDBModel.Expense">
+              <MappingFragment StoreEntitySet="Expenses">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ExpenseCategory" TypeName="BudgetDBModel.ExpenseCategory" StoreEntitySet="ExpenseCategory">
+            <EndProperty Name="BudgetCategories">
+              <ScalarProperty Name="id" ColumnName="CategoryID" />
+            </EndProperty>
+            <EndProperty Name="Expenses">
+              <ScalarProperty Name="id" ColumnName="ExpenseID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

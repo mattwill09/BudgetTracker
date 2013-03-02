@@ -12,34 +12,35 @@ using BudgetTracker.Models;
 
 namespace BudgetTracker.Controllers
 {
-    public class CategoryAPIController : ApiController
+    public class ExpenseAPIController : ApiController
     {
-        private Models.BudgetTrackerContext db = new Models.BudgetTrackerContext();
+        private Models.Entities db = new Models.Entities();
+        
 
-        // GET api/CategoryAPI
-        public IEnumerable<BudgetCategory> GetBudgetCategories()
+        // GET api/ExpenseAPI
+        public IEnumerable<Expenses> GetExpenses()
         {
-            return db.BudgetCategories.AsEnumerable();
+            return db.Expenses.AsEnumerable();
         }
 
-        // GET api/CategoryAPI/5
-        public BudgetCategory GetBudgetCategory(Guid id)
+        // GET api/ExpenseAPI/5
+        public Expenses GetExpense(Guid id)
         {
-            BudgetCategory budgetcategory = db.BudgetCategories.Find(id);
-            if (budgetcategory == null)
+            Expenses expense = db.Expenses.Find(id);
+            if (expense == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
             }
 
-            return budgetcategory;
+            return expense;
         }
 
-        // PUT api/CategoryAPI/5
-        public HttpResponseMessage PutBudgetCategory(Guid id, BudgetCategory budgetcategory)
+        // PUT api/ExpenseAPI/5
+        public HttpResponseMessage PutExpense(Guid id, Expenses expense)
         {
-            if (ModelState.IsValid && id == budgetcategory.id)
+            if (ModelState.IsValid && id == expense.id)
             {
-                db.Entry(budgetcategory).State = EntityState.Modified;
+                db.Entry(expense).State = EntityState.Modified;
 
                 try
                 {
@@ -58,17 +59,17 @@ namespace BudgetTracker.Controllers
             }
         }
 
-        // POST api/CategoryAPI
-        public HttpResponseMessage PostBudgetCategory(BudgetCategory budgetcategory)
+        // POST api/ExpenseAPI
+        public HttpResponseMessage PostExpense(Expenses expense)
         {
-            budgetcategory.id = System.Guid.NewGuid();
+            expense.id = System.Guid.NewGuid();
             if (ModelState.IsValid)
             {
-                db.BudgetCategories.Add(budgetcategory);
+                db.Expenses.Add(expense);
                 db.SaveChanges();
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, budgetcategory);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = budgetcategory.id }));
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, expense);
+                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = expense.id }));
                 return response;
             }
             else
@@ -77,16 +78,16 @@ namespace BudgetTracker.Controllers
             }
         }
 
-        // DELETE api/CategoryAPI/5
-        public HttpResponseMessage DeleteBudgetCategory(Guid id)
+        // DELETE api/ExpenseAPI/5
+        public HttpResponseMessage DeleteExpense(Guid id)
         {
-            BudgetCategory budgetcategory = db.BudgetCategories.Find(id);
-            if (budgetcategory == null)
+            Expenses expense = db.Expenses.Find(id);
+            if (expense == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            db.BudgetCategories.Remove(budgetcategory);
+            db.Expenses.Remove(expense);
 
             try
             {
@@ -97,7 +98,7 @@ namespace BudgetTracker.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, budgetcategory);
+            return Request.CreateResponse(HttpStatusCode.OK, expense);
         }
 
         protected override void Dispose(bool disposing)

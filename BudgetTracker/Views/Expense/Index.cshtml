@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@Scripts.Render("~/bundles/knockout")
+
+<h2>Your expenses (<span data-bind="text: expenses().length"></span>)</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>BudgetCategories</th>
+            <th></th>
+        </tr>
+    </thead>
+    <!-- Todo: Generate table body -->
+    <tbody data-bind="foreach: expenses">
+        <tr>
+            <td>
+                <input data-bind="datepicker: Date" />
+            </td>
+            <td>
+                <input data-bind="value: EditAmount" />
+            </td>
+            <td>
+                <input data-bind="value: Description" />
+            </td>
+            <td>
+                <select data-bind="chosen: $root.categories, value: BudgetCategories, optionsText: 'Name'" class="chzn-select" style="width: 350px;" multiple="multiple"></select>
+            </td>
+            <td><a href='#' data-bind="click: $root.removeExpense">Remove</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<button data-bind="click: addExpense">Add another expense</button>
+
+<button data-bind="click: save, enable: expenses().length > 0">Save</button>
+
+
+<script type="text/javascript" src="~/Scripts/ExpenseStuff.js"></script>
+<script type="text/javascript" src="~/Scripts/CategoryStuff.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ko.applyBindings(new ExpensesViewModel());
+    });
+</script>

@@ -94,6 +94,3 @@ function CategoriesViewModel() {
     };
 }
 
-$(document).ready(function () {
-    ko.applyBindings(new CategoriesViewModel());
-});
